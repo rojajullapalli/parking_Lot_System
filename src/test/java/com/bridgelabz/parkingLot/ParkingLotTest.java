@@ -38,5 +38,16 @@ public class ParkingLotTest {
         }
     }
 
+    @Test
+    void givenAVechile_WhenAlreadyParked_Should_ReturnFalse() {
+        try {
+            parkingLotSystem.park(vechile);
+            parkingLotSystem.park(vechile);
+        } catch (ParkingLotException e) {
+            Assertions.assertEquals("Vechile is Already Parked", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }
 
