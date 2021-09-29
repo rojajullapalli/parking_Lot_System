@@ -49,5 +49,15 @@ public class ParkingLotTest {
         }
     }
 
+    @Test
+    void givenAVechile_WhenNotParked_ShouldNotBeUnparked() {
+        try {
+            parkingLotSystem.unPark(new Object());
+        } catch (ParkingLotException e) {
+            Assertions.assertEquals("Vechile To Be Parked To Unpark.Unpark Is Not Possible", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }
 
