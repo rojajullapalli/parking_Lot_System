@@ -4,7 +4,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
+
+
 public class ParkingLotTest {
+    ParkingLotOwner owner;
     Object vechile;
     ParkingLotSystem parkingLotSystem;
 
@@ -12,6 +16,8 @@ public class ParkingLotTest {
     void setUp() {
         vechile = new Object();
         parkingLotSystem = new ParkingLotSystem();
+        parkingLotSystem = new ParkingLotSystem(1);
+        owner = new ParkingLotOwner();
     }
 
     @Test
@@ -40,11 +46,14 @@ public class ParkingLotTest {
 
     @Test
     void givenAVechile_WhenAlreadyParked_Should_ReturnFalse() {
+        parkingLotSystem.registerOwner( owner);
         try {
-            parkingLotSystem.park(vechile);
-            parkingLotSystem.park(vechile);
+            parkingLotSystem.parking(vechile);
+            parkingLotSystem.isVechileParked(vechile);
+            parkingLotSystem.parking(vechile);
+            parkingLotSystem.isVechileParked(vechile);
         } catch (ParkingLotException e) {
-            Assertions.assertEquals("Vechile is Already Parked", e.getMessage());
+            Assertions.assertEquals("Vechile Already Parked", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -55,6 +64,20 @@ public class ParkingLotTest {
             parkingLotSystem.unPark(new Object());
         } catch (ParkingLotException e) {
             Assertions.assertEquals("Vechile To Be Parked To Unpark.Unpark Is Not Possible", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void given_Car_WhenParkingLotFull_ShouldInformOwner() {
+        parkingLotSystem.registerOwner(owner);
+        try {
+            parkingLotSystem.park(vechile);
+            parkingLotSystem.park(new Object());
+        } catch (ParkingLotException e) {
+            boolean checkCapacityFull = owner.isCapacityFull();
+            Assertions.assertTrue(checkCapacityFull);
+            Assertions.assertEquals("Cannot Park Parking Lot Already Is Full",e.getMessage());
             e.printStackTrace();
         }
     }
