@@ -1,23 +1,20 @@
 package com.bridgelabz.parkingLot;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-
-
 public class ParkingLotTest {
-    ParkingLotOwner owner;
+    ParkingLot owner;
+    ParkingLot security;
     Object vechile;
     ParkingLotSystem parkingLotSystem;
 
     @BeforeEach
     void setUp() {
         vechile = new Object();
-        parkingLotSystem = new ParkingLotSystem();
         parkingLotSystem = new ParkingLotSystem(1);
-        owner = new ParkingLotOwner();
+        owner = new ParkingLot(ParkingLot.Person.OWNER);
+        security = new ParkingLot(ParkingLot.Person.SEQURITY);
     }
 
     @Test
@@ -46,7 +43,7 @@ public class ParkingLotTest {
 
     @Test
     void givenAVechile_WhenAlreadyParked_Should_ReturnFalse() {
-        parkingLotSystem.registerOwner( owner);
+        parkingLotSystem.registerPerson( owner);
         try {
             parkingLotSystem.parking(vechile);
             parkingLotSystem.isVechileParked(vechile);
@@ -70,12 +67,26 @@ public class ParkingLotTest {
 
     @Test
     public void given_Car_WhenParkingLotFull_ShouldInformOwner() {
-        parkingLotSystem.registerOwner(owner);
+        parkingLotSystem.registerPerson(owner);
         try {
             parkingLotSystem.park(vechile);
             parkingLotSystem.park(new Object());
         } catch (ParkingLotException e) {
             boolean checkCapacityFull = owner.isCapacityFull();
+            Assertions.assertTrue(checkCapacityFull);
+            Assertions.assertEquals("Cannot Park Parking Lot Already Is Full",e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void given_Car_WhenParkingLotFull_ShouldInformSecurity() {
+        parkingLotSystem.registerPerson(security);
+        try {
+            parkingLotSystem.park(vechile);
+            parkingLotSystem.park(new Object());
+        } catch (ParkingLotException e) {
+            boolean checkCapacityFull = security.isCapacityFull();
             Assertions.assertTrue(checkCapacityFull);
             Assertions.assertEquals("Cannot Park Parking Lot Already Is Full",e.getMessage());
             e.printStackTrace();

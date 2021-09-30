@@ -3,7 +3,7 @@ package com.bridgelabz.parkingLot;
 public class ParkingLotSystem {
     private int actualCapacity;
     private int currentCapacity;
-    private ParkingLotOwner owner;
+    private ParkingLot person;
     private Object vechile;
 
     public ParkingLotSystem(int capacity) {
@@ -11,11 +11,9 @@ public class ParkingLotSystem {
         this.currentCapacity = 0;
     }
 
-    public ParkingLotSystem() {
-    }
 
-    public void registerOwner(ParkingLotOwner owner) {
-        this.owner = owner;
+    public void registerPerson(ParkingLot person) {
+        this.person = person;
     }
 
     public void parking(Object vechile) throws ParkingLotException {
@@ -26,7 +24,7 @@ public class ParkingLotSystem {
 
     public void park(Object vechile) throws ParkingLotException {
         if (this.currentCapacity == actualCapacity) {
-            owner.capacityIsFull();
+            person.capacityIsFull();
             throw new ParkingLotException("Cannot Park Parking Lot Already Is Full",ParkingLotException.ExceptionName.CANNOT_PARK);
         }
         this.currentCapacity++;
