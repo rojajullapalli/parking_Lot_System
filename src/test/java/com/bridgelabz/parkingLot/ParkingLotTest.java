@@ -4,17 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ParkingLotTest {
-    ParkingLot owner;
-    ParkingLot security;
     Object vechile;
     ParkingLotSystem parkingLotSystem;
 
     @BeforeEach
     void setUp() {
         vechile = new Object();
-        parkingLotSystem = new ParkingLotSystem(1);
-        owner = new ParkingLot(ParkingLot.Person.OWNER);
-        security = new ParkingLot(ParkingLot.Person.SEQURITY);
+        parkingLotSystem = new ParkingLotSystem(3);
+
     }
 
     @Test
@@ -43,7 +40,7 @@ public class ParkingLotTest {
 
     @Test
     void givenAVechile_WhenAlreadyParked_Should_ReturnFalse() {
-        parkingLotSystem.registerPerson( owner);
+        //parkingLotSystem.registerPerson( owner);
         try {
             parkingLotSystem.parking(vechile);
             parkingLotSystem.isVechileParked(vechile);
@@ -67,13 +64,10 @@ public class ParkingLotTest {
 
     @Test
     public void given_Car_WhenParkingLotFull_ShouldInformOwner() {
-        parkingLotSystem.registerPerson(owner);
         try {
             parkingLotSystem.park(vechile);
             parkingLotSystem.park(new Object());
         } catch (ParkingLotException e) {
-            boolean checkCapacityFull = owner.isCapacityFull();
-            Assertions.assertTrue(checkCapacityFull);
             Assertions.assertEquals("Cannot Park Parking Lot Already Is Full",e.getMessage());
             e.printStackTrace();
         }
@@ -81,13 +75,10 @@ public class ParkingLotTest {
 
     @Test
     public void given_Car_WhenParkingLotFull_ShouldInformSecurity() {
-        parkingLotSystem.registerPerson(security);
         try {
             parkingLotSystem.park(vechile);
             parkingLotSystem.park(new Object());
         } catch (ParkingLotException e) {
-            boolean checkCapacityFull = security.isCapacityFull();
-            Assertions.assertTrue(checkCapacityFull);
             Assertions.assertEquals("Cannot Park Parking Lot Already Is Full",e.getMessage());
             e.printStackTrace();
         }
