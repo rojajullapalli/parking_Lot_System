@@ -29,8 +29,8 @@ public class ParkingLotSystem {
         return true;
     }
 
-    public boolean capacityAvailable() {
-        return true;
+    public boolean isFreespace() throws ParkingLotException {
+        throw new ParkingLotException("Parking Lot Is Free You Can Park", ParkingLotException.ExceptionName.CANNOT_PARK);
     }
 
     public boolean isVechileParked(Object vechile) {

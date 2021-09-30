@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 public class ParkingLotTest {
     Object vechile;
     ParkingLotSystem parkingLotSystem;
+    int capacity = 1;
 
     @BeforeEach
     void setUp() {
         vechile = new Object();
-        parkingLotSystem = new ParkingLotSystem(3);
-
+        parkingLotSystem = new ParkingLotSystem(capacity);
     }
 
     @Test
@@ -80,6 +80,17 @@ public class ParkingLotTest {
             parkingLotSystem.park(new Object());
         } catch (ParkingLotException e) {
             Assertions.assertEquals("Cannot Park Parking Lot Already Is Full",e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void given_Car_WhenParkingLotFree_ShouldInformOwner() throws ParkingLotException {
+        try {
+            parkingLotSystem.park(vechile);
+            parkingLotSystem.isFreespace();
+        }catch (ParkingLotException e) {
+            Assertions.assertEquals("Parking Lot Is Free You Can Park",e.getMessage());
             e.printStackTrace();
         }
     }
