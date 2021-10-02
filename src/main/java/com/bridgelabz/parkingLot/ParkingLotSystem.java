@@ -47,6 +47,9 @@ public class ParkingLotSystem {
             return false;
         if (this.vechiles.contains(vechile)){
             this.vechiles.remove(vechile);
+            for (ParkingLotObserver observer:observers) {
+                observer.capacityIsAvailable();
+            }
             return true;
         }
         throw new ParkingLotException("Vechile To Be Parked To Unpark.Unpark Is Not Possible", ParkingLotException.ExceptionName.CANNOT_PARK);
