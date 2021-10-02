@@ -1,17 +1,19 @@
 package com.bridgelabz.parkingLot;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ParkingLotTest {
+    ParkingLotOwner owner;
     Object vechile;
     ParkingLotSystem parkingLotSystem;
-    int capacity = 1;
 
     @BeforeEach
     void setUp() {
         vechile = new Object();
-        parkingLotSystem = new ParkingLotSystem(capacity);
+        parkingLotSystem = new ParkingLotSystem(1);
+        owner = new ParkingLotOwner();
     }
 
     @Test
@@ -29,25 +31,19 @@ public class ParkingLotTest {
     void givenAVechile_WhenUnparked_ShouldReturnTrue() {
         try {
             parkingLotSystem.park(vechile);
-            boolean park = parkingLotSystem.isVechileParked(vechile);
-            parkingLotSystem.unPark(vechile);
-            boolean unPark = parkingLotSystem.isVechileUnParked(vechile);
-            Assertions.assertEquals(park, unPark);
+            boolean isUnparked = parkingLotSystem.unPark(vechile);
+            Assertions.assertTrue(isUnparked);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    void givenAVechile_WhenAlreadyParked_Should_ReturnFalse() {
-        //parkingLotSystem.registerPerson( owner);
+    void givenAVechile_WhenAlreadyParked_Should_ReturnFalse() throws ParkingLotException {
+        parkingLotSystem.park(vechile);
         try {
-            parkingLotSystem.parking(vechile);
-            parkingLotSystem.isVechileParked(vechile);
-            parkingLotSystem.parking(vechile);
-            parkingLotSystem.isVechileParked(vechile);
+            parkingLotSystem.park(vechile);
         } catch (ParkingLotException e) {
-            Assertions.assertEquals("Vechile Already Parked", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -55,7 +51,7 @@ public class ParkingLotTest {
     @Test
     void givenAVechile_WhenNotParked_ShouldNotBeUnparked() {
         try {
-            parkingLotSystem.unPark(new Object());
+            parkingLotSystem.unPark(vechile);
         } catch (ParkingLotException e) {
             Assertions.assertEquals("Vechile To Be Parked To Unpark.Unpark Is Not Possible", e.getMessage());
             e.printStackTrace();
@@ -64,36 +60,27 @@ public class ParkingLotTest {
 
     @Test
     public void given_Car_WhenParkingLotFull_ShouldInformOwner() {
+        parkingLotSystem.registerOwner(owner);
         try {
             parkingLotSystem.park(vechile);
             parkingLotSystem.park(new Object());
         } catch (ParkingLotException e) {
-            Assertions.assertEquals("Cannot Park Parking Lot Already Is Full",e.getMessage());
-            e.printStackTrace();
+            boolean capacityFull = owner.isCapacityFull();
+            Assertions.assertTrue(capacityFull);
+
         }
     }
 
     @Test
-    public void given_Car_WhenParkingLotFull_ShouldInformSecurity() {
-        try {
+    void givenCapacityIs2_ShouldBeAbleToParkTwoVechiles() throws ParkingLotException {
+        Object vechile2 = new Object();
+        parkingLotSystem.setCapcity(2);
+        parkingLotSystem.registerOwner(owner);
             parkingLotSystem.park(vechile);
-            parkingLotSystem.park(new Object());
-        } catch (ParkingLotException e) {
-            Assertions.assertEquals("Cannot Park Parking Lot Already Is Full",e.getMessage());
-            e.printStackTrace();
-        }
+            parkingLotSystem.park(vechile2);
+            boolean isparked1 = parkingLotSystem.isVechileParked(vechile);
+            boolean isParked2 = parkingLotSystem.isVechileParked(vechile2);
+            Assertions.assertTrue(isparked1 && isParked2);
     }
-
-    @Test
-    public void given_Car_WhenParkingLotFree_ShouldInformOwner() throws ParkingLotException {
-        try {
-            parkingLotSystem.park(vechile);
-            parkingLotSystem.isFreespace();
-        }catch (ParkingLotException e) {
-            Assertions.assertEquals("Parking Lot Is Free You Can Park",e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
 }
 

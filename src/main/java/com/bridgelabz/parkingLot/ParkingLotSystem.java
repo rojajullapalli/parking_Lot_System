@@ -1,51 +1,49 @@
 package com.bridgelabz.parkingLot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParkingLotSystem {
     private int actualCapacity;
-    private int currentCapacity;
-    private Object vechile;
+    private List vechiles;
+    private ParkingLotOwner owner;
 
     public ParkingLotSystem(int capacity) {
+        this.vechiles = new ArrayList();
         this.actualCapacity = capacity;
-        this.currentCapacity = 0;
+    }
+    public void registerOwner(ParkingLotOwner owner) {
+        this.owner = owner;
     }
 
-    public void parking(Object vechile) throws ParkingLotException {
-        if(this.vechile != null)
-            throw new ParkingLotException("Vechile Already Parked",ParkingLotException.ExceptionName.CANNOT_PARK);
-        this.vechile = vechile;
+    public void setCapcity(int capacity) {
+        this.actualCapacity = capacity;
     }
 
     public void park(Object vechile) throws ParkingLotException {
-        if (this.currentCapacity == actualCapacity) {
-            capacityIsFull();
-            throw new ParkingLotException("Cannot Park Parking Lot Already Is Full",ParkingLotException.ExceptionName.CANNOT_PARK);
+        if(isVechileParked(vechile))
+            throw new ParkingLotException("Cannot Park Already Vechile Parked", ParkingLotException.ExceptionName.CANNOT_PARK);
+        if (this.vechiles.size() == actualCapacity) {
+            owner.capacityIsFull();
+            throw new ParkingLotException("Cannot Park Parking Lot Already Is Full", ParkingLotException.ExceptionName.CANNOT_PARK);
         }
-        this.currentCapacity++;
-        this.vechile = vechile;
+        this.vechiles.add(vechile);
     }
 
-    public boolean capacityIsFull() {
-        return true;
-    }
-
-    public boolean isFreespace() throws ParkingLotException {
-        throw new ParkingLotException("Parking Lot Is Free You Can Park", ParkingLotException.ExceptionName.CANNOT_PARK);
-    }
 
     public boolean isVechileParked(Object vechile) {
-        return this.vechile.equals(vechile);
+        if(this.vechiles.contains(vechile))
+            return true;
+        return false;
     }
 
-    public void unPark(Object vechile) throws ParkingLotException {
-        if (this.vechile == null)
-            throw new ParkingLotException("Vechile To Be Parked To Unpark.Unpark Is Not Possible", ParkingLotException.ExceptionName.CANNOT_PARK);
-        if (this.vechile.equals(vechile))
-            this.vechile = null;
+    public boolean unPark(Object vechile) throws ParkingLotException {
+        if (vechile == null)
+            return false;
+        if (this.vechiles.contains(vechile)){
+            this.vechiles.remove(vechile);
+            return true;
+        }
+        throw new ParkingLotException("Vechile To Be Parked To Unpark.Unpark Is Not Possible", ParkingLotException.ExceptionName.CANNOT_PARK);
     }
-
-    public boolean isVechileUnParked(Object vechile) {
-        return this.vechile == null;
-    }
-
 }
