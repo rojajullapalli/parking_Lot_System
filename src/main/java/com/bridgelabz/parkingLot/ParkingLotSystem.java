@@ -6,15 +6,18 @@ import java.util.List;
 public class ParkingLotSystem {
     private int actualCapacity;
     private List vechiles;
-    private ParkingLotOwner owner;
+    private List<ParkingLotObserver> observers;
 
     public ParkingLotSystem(int capacity) {
+        this.observers = new ArrayList<>();
         this.vechiles = new ArrayList();
         this.actualCapacity = capacity;
     }
-    public void registerOwner(ParkingLotOwner owner) {
-        this.owner = owner;
+
+    public void registerParkingLotObserver(ParkingLotObserver observer) {
+        this.observers.add(observer);
     }
+
 
     public void setCapcity(int capacity) {
         this.actualCapacity = capacity;
@@ -24,7 +27,9 @@ public class ParkingLotSystem {
         if(isVechileParked(vechile))
             throw new ParkingLotException("Cannot Park Already Vechile Parked", ParkingLotException.ExceptionName.CANNOT_PARK);
         if (this.vechiles.size() == actualCapacity) {
-            owner.capacityIsFull();
+            for (ParkingLotObserver observer:observers) {
+                observer.capacityIsFull();
+            }
             throw new ParkingLotException("Cannot Park Parking Lot Already Is Full", ParkingLotException.ExceptionName.CANNOT_PARK);
         }
         this.vechiles.add(vechile);

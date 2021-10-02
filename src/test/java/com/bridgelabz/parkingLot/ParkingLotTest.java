@@ -8,12 +8,14 @@ public class ParkingLotTest {
     ParkingLotOwner owner;
     Object vechile;
     ParkingLotSystem parkingLotSystem;
+    AirportSecurity airportSecurity;
 
     @BeforeEach
     void setUp() {
         vechile = new Object();
         parkingLotSystem = new ParkingLotSystem(1);
         owner = new ParkingLotOwner();
+        airportSecurity = new AirportSecurity();
     }
 
     @Test
@@ -59,8 +61,8 @@ public class ParkingLotTest {
     }
 
     @Test
-    public void given_Car_WhenParkingLotFull_ShouldInformOwner() {
-        parkingLotSystem.registerOwner(owner);
+    void given_Car_WhenParkingLotFull_ShouldInformOwner() {
+        parkingLotSystem.registerParkingLotObserver(owner);
         try {
             parkingLotSystem.park(vechile);
             parkingLotSystem.park(new Object());
@@ -75,12 +77,35 @@ public class ParkingLotTest {
     void givenCapacityIs2_ShouldBeAbleToParkTwoVechiles() throws ParkingLotException {
         Object vechile2 = new Object();
         parkingLotSystem.setCapcity(2);
-        parkingLotSystem.registerOwner(owner);
+        parkingLotSystem.registerParkingLotObserver(owner);
             parkingLotSystem.park(vechile);
             parkingLotSystem.park(vechile2);
             boolean isparked1 = parkingLotSystem.isVechileParked(vechile);
             boolean isParked2 = parkingLotSystem.isVechileParked(vechile2);
             Assertions.assertTrue(isparked1 && isParked2);
+    }
+
+    @Test
+    void given_Car_WhenParkingLotFull_ShouldInformAirportSecueity(){
+        parkingLotSystem.registerParkingLotObserver(airportSecurity);
+        try {
+            parkingLotSystem.park(vechile);
+            parkingLotSystem.park(new Object());
+        } catch (ParkingLotException e) {
+            boolean capacityFull = airportSecurity.isCapacityFull();
+            Assertions.assertTrue(capacityFull);
+        }
+    }
+
+    @Test
+    void given_Car_WhenParkingNotLotFull_ShouldNotInformAirportSecueity(){
+        parkingLotSystem.registerParkingLotObserver(airportSecurity);
+        try {
+            parkingLotSystem.park(vechile);
+        } catch (ParkingLotException e) {
+            boolean capacityFull = airportSecurity.isCapacityFull();
+            Assertions.assertFalse(capacityFull);
+        }
     }
 }
 
